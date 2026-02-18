@@ -1,10 +1,14 @@
 name: Build Flet APK
 
 
+
+
 on:
   push:
     branches: [ main, master ]
   workflow_dispatch:
+
+
 
 
 jobs:
@@ -15,10 +19,14 @@ jobs:
       - uses: actions/checkout@v4
 
 
+
+
       - name: Setup Python
         uses: actions/setup-python@v4
         with:
           python-version: '3.x'
+
+
 
 
       - name: Install Flet and Dependencies
@@ -28,10 +36,17 @@ jobs:
           pip install telethon
 
 
+
+
       - name: Install Flutter SDK
         uses: subosito/flutter-action@v2
         with:
           channel: 'stable'
+
+      - name: Accept Android Licenses
+        run: yes | flutter doctor --android-licenses
+
+
 
 
       - name: Build APK
@@ -43,4 +58,6 @@ jobs:
         with:
           name: cyber-guard-apk
           path: build/apk/*.apk
+
+
 
