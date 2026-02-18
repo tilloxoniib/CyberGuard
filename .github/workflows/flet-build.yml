@@ -1,0 +1,39 @@
+name: Build Flet APK
+
+on:
+  push:
+    branches: [ main, master ]
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Setup Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.x'
+
+      - name: Install Flet and Dependencies
+        run: |
+          pip install --upgrade pip
+          pip install flet
+          pip install telethon
+
+      - name: Install Flutter SDK
+        uses: subosito/flutter-action@v2
+        with:
+          channel: 'stable'
+
+      - name: Build APK
+        run: |
+          flet build apk --no-version-check
+          
+      - name: Upload APK Artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: cyber-guard-apk
+          path: build/apk/*.apk
