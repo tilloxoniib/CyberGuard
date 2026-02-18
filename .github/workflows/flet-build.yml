@@ -32,7 +32,7 @@ jobs:
 
       - name: Build APK Help
         run: |
-          flet build apk --help
+         yes | flet build apk --include-packages telethon
 
       - name: Build APK
         run: |
