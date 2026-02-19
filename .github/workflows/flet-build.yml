@@ -20,15 +20,11 @@ jobs:
           distribution: 'temurin'
           java-version: '17'
 
-      # Logda so'ralgan aynan shu versiyani o'rnatamiz
-      - name: Setup Flutter
+      - name: Setup Flutter (Latest Stable)
         uses: subosito/flutter-action@v2
         with:
           channel: 'stable'
-          flutter-version: '3.29.0' 
-          # Eslatma: 3.38.7 hali chiqmagan bo'lishi mumkin, shuning uchun 
-          # eng so'nggi barqaror versiya 3.29.0 ni qo'ydim. 
-          # Agar Flet yana so'rasa, "yes" komandasi baribir ishlaydi.
+          flutter-version: '3.29.0'
 
       - name: Setup Python
         uses: actions/setup-python@v4
@@ -38,19 +34,14 @@ jobs:
       - name: Install Flet and Dependencies
         run: |
           pip install --upgrade pip
-          pip install flet
-          pip install -r requirements.txt
+          pip install flet telethon
 
-      - name: Accept Android Licenses (Manual Method)
+      - name: Accept Android Licenses
         run: |
-          mkdir -p "$ANDROID_HOME/licenses"
-          echo "24333f8a63b6825ea9c5514f83c2829b004d1fee" > "$ANDROID_HOME/licenses/android-sdk-license"
-          echo "84831b9409646a918e30573bab4c9c91346d8abd" > "$ANDROID_HOME/licenses/android-sdk-preview-license"
-          echo "d975f751698a77b662f1254ddbeed3901e976f5a" > "$ANDROID_HOME/licenses/intel-android-extra-license"
+          yes | flutter doctor --android-licenses
 
-      - name: Build APK (Force Yes)
+      - name: Build APK (Auto-Approve SDK Install)
         run: |
-          # Flet baribir savol bersa, unga majburlab "ha" deb javob beramiz
           yes "y" | flet build apk --arch arm64-v8a --arch armeabi-v7a --arch x86_64
           
       - name: Upload APK Artifact
