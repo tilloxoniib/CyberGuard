@@ -1,0 +1,5 @@
+telethon
+certifi
+pyaes
+rsa
+pyasn1
