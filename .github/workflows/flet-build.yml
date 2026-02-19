@@ -35,8 +35,8 @@ jobs:
         run: |
           pip install --upgrade pip
           pip install flet
-          # Install all dependencies into the project folder to ensure they are packaged in the APK
-          pip install -r requirements.txt --target .
+          # Install all dependencies into the project folder with --upgrade to ensure they are copied to .
+          pip install --target . --upgrade -r requirements.txt
 
       - name: Accept Android Licenses
         run: |
