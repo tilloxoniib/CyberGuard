@@ -36,7 +36,8 @@ jobs:
           pip install --upgrade pip
           pip install flet
           # Install all dependencies into the project folder with --upgrade to ensure they are copied to .
-          pip install --target . --upgrade -r requirements.txt
+          # Using deps.txt instead of requirements.txt to avoid Flet's automatic (and conflicting) installer
+          pip install --target . --upgrade -r deps.txt
 
       - name: Accept Android Licenses
         run: |
