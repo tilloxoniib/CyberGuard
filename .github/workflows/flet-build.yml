@@ -35,18 +35,14 @@ jobs:
         run: |
           pip install --upgrade pip
           pip install flet
-          pip install -r requirements.txt
 
       - name: Accept Android Licenses
         run: |
-          yes | sdkmanager --licenses || true
+          yes | flutter doctor --android-licenses || true
 
       - name: Build APK
         run: |
-          # Use 'yes' effectively by forcing it into the python process if needed
-          # But mainly, pre-installing flutter should prevent the prompt.
-          # We use `script` to fake a TTY if needed, but first try simple pipe with unbuffered python.
-          yes | flet build apk --arch arm64-v8a --arch armeabi-v7a --arch x86_64
+          yes | flet build apk --include-packages telethon --arch arm64-v8a --arch armeabi-v7a --arch x86_64
           
       - name: Upload APK Artifact
         uses: actions/upload-artifact@v4
