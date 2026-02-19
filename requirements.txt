@@ -1,0 +1,6 @@
+flet==0.80.1
+telethon
+certifi
+pyaes
+rsa
+pyasn1

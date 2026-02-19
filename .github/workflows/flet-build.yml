@@ -34,10 +34,8 @@ jobs:
       - name: Install Flet and Dependencies
         run: |
           pip install --upgrade pip
-          pip install flet
-          # Install all dependencies into the project folder with --upgrade to ensure they are copied to .
-          # Using deps.txt instead of requirements.txt to avoid Flet's automatic (and conflicting) installer
-          pip install --target . --upgrade -r deps.txt
+          pip install flet==0.80.1
+          pip install -r requirements.txt
 
       - name: Accept Android Licenses
         run: |
@@ -45,7 +43,6 @@ jobs:
 
       - name: Build APK
         run: |
-          # Flet will bundle everything from the directory, including the --target . dependencies
           yes | flet build apk --arch arm64-v8a --arch armeabi-v7a --arch x86_64
           
       - name: Upload APK Artifact
