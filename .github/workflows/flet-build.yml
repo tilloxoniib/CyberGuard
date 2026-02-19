@@ -17,31 +17,23 @@ jobs:
         with:
           python-version: '3.x'
 
-      - name: Install Dependencies (Hacker Way)
+      - name: Install Flet and Dependencies
         run: |
           pip install --upgrade pip
           pip install flet
-          # Telethonni to'g'ridan-to'g'ri papka ichiga o'rnatamiz
-          pip install telethon --target .
-          # Eski requirements faylini o'chirib tashlaymiz (agar bo'lsa)
-          rm -f requirements.txt
+          pip install -r requirements.txt
 
       - name: Install Flutter SDK
         uses: subosito/flutter-action@v2
         with:
           channel: 'stable'
 
-      - name: Accept Android Licenses
-        run: |
-          yes | flutter doctor --android-licenses
-
       - name: Build APK
         run: |
-          # Endi hech qanday requirements kerak emas
-          yes | flet build apk
+          flet build apk --no-version-check --include-packages flet telethon --arch arm64-v8a --arch armeabi-v7a --arch x86_64
           
       - name: Upload APK Artifact
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v3
         with:
           name: cyber-guard-apk
           path: build/apk/*.apk
