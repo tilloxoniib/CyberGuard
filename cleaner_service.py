@@ -6,8 +6,9 @@ from telethon import TelegramClient, events
 from config import *
 
 class CleanerService:
-    def __init__(self, log_callback=None):
+    def __init__(self, session_path="mobile_session", log_callback=None):
         self.log_callback = log_callback
+        self.session_path = session_path
         self.client = None
         self.phone = None
         self.loop = asyncio.new_event_loop()
@@ -38,7 +39,7 @@ class CleanerService:
         self.phone = phone
         try:
             if not self.client:
-                self.client = TelegramClient('mobile_session', API_ID, API_HASH, loop=self.loop)
+                self.client = TelegramClient(self.session_path, API_ID, API_HASH, loop=self.loop)
             
             if not self.client.is_connected():
                 await self.client.connect()
@@ -110,3 +111,25 @@ class CleanerService:
     def stop(self):
         self.is_running = False
         self.log("🛑 Himoya to'xtatildi.")
+
+    def check_auth(self):
+        """Checks if the user is already authorized synchronously."""
+        return self._run_coroutine(self._check_auth_async())
+
+    async def _check_auth_async(self):
+        try:
+            if not self.client:
+                self.client = TelegramClient(self.session_path, API_ID, API_HASH, loop=self.loop)
+            
+            if not self.client.is_connected():
+                await self.client.connect()
+            
+            authorized = await self.client.is_user_authorized()
+            if authorized:
+                self.is_running = True
+                self.loop.create_task(self._monitor_messages())
+                return True
+            return False
+        except Exception as e:
+            self.log(f"Avto-login xatosi: {e}")
+            return False

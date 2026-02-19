@@ -2,11 +2,17 @@ import flet as ft
 import time
 import threading
 import asyncio
+import os
 from config import *
 from cleaner_service import CleanerService
 
 def main(page: ft.Page):
     try:
+        # --- STORAGE SETUP ---
+        # FLET_APP_STORAGE_DATA is specifically for persistent Android storage
+        storage_path = os.environ.get("FLET_APP_STORAGE_DATA", ".")
+        session_file = os.path.join(storage_path, "mobile_session")
+        
         # --- SETUP ---
         page.title = APP_NAME
         page.theme_mode = ft.ThemeMode.DARK
@@ -15,7 +21,7 @@ def main(page: ft.Page):
         page.window_width = 380 
         page.window_height = 800
         
-        cleaner = CleanerService()
+        cleaner = CleanerService(session_path=session_file)
 
         # --- STATE ---
         is_logged_in = False
@@ -235,17 +241,20 @@ def main(page: ft.Page):
 
         # --- LAYOUT ---
         page.add(
-            ft.Column([
-                header,
-                ft.Container(height=20),
-                login_container,
-                dashboard_container,
-                ft.Container(height=20),
-                ft.Text("Jarayonlar:", size=14, weight="bold", color=COLOR_TEXT),
-                log_container,
             ], expand=True, horizontal_alignment=ft.CrossAxisAlignment.CENTER)
         )
         page.update()
+
+        # --- AUTO LOGIN CHECK ---
+        def run_auto_login():
+            add_log("Tizim tekshirilmoqda...")
+            if cleaner.check_auth():
+                switch_to_dashboard()
+            else:
+                add_log("Iltimos, tizimga kiring.")
+
+        threading.Thread(target=run_auto_login, daemon=True).start()
+        
         print("UI Loaded")
 
     except Exception as e:
