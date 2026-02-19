@@ -8,6 +8,8 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+    env:
+      PYTHONUNBUFFERED: "1"
     
     steps:
       - uses: actions/checkout@v4
@@ -22,7 +24,7 @@ jobs:
         uses: subosito/flutter-action@v2
         with:
           channel: 'stable'
-          flutter-version: '3.29.0'
+          flutter-version: '3.27.1'
 
       - name: Setup Python
         uses: actions/setup-python@v4
@@ -38,10 +40,13 @@ jobs:
       - name: Accept Android Licenses
         run: |
           yes | sdkmanager --licenses || true
-          
+
       - name: Build APK
         run: |
-          flet build apk --arch arm64-v8a --arch armeabi-v7a --arch x86_64
+          # Use 'yes' effectively by forcing it into the python process if needed
+          # But mainly, pre-installing flutter should prevent the prompt.
+          # We use `script` to fake a TTY if needed, but first try simple pipe with unbuffered python.
+          yes | flet build apk --arch arm64-v8a --arch armeabi-v7a --arch x86_64
           
       - name: Upload APK Artifact
         uses: actions/upload-artifact@v4
