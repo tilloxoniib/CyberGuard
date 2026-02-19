@@ -37,16 +37,16 @@ jobs:
           pip install flet
           pip install -r requirements.txt
 
-      - name: Accept Android Licenses
+      - name: Accept Android Licenses (Manual Method)
         run: |
-          yes | sdkmanager --licenses || true
+          mkdir -p "$ANDROID_HOME/licenses"
+          echo "24333f8a63b6825ea9c5514f83c2829b004d1fee" > "$ANDROID_HOME/licenses/android-sdk-license"
+          echo "84831b9409646a918e30573bab4c9c91346d8abd" > "$ANDROID_HOME/licenses/android-sdk-preview-license"
+          echo "d975f751698a77b662f1254ddbeed3901e976f5a" > "$ANDROID_HOME/licenses/intel-android-extra-license"
 
       - name: Build APK
         run: |
-          # Use 'yes' effectively by forcing it into the python process if needed
-          # But mainly, pre-installing flutter should prevent the prompt.
-          # We use `script` to fake a TTY if needed, but first try simple pipe with unbuffered python.
-          yes | flet build apk --arch arm64-v8a --arch armeabi-v7a --arch x86_64
+          flet build apk --arch arm64-v8a --arch armeabi-v7a --arch x86_64
           
       - name: Upload APK Artifact
         uses: actions/upload-artifact@v4
