@@ -20,11 +20,15 @@ jobs:
           distribution: 'temurin'
           java-version: '17'
 
+      # Logda so'ralgan aynan shu versiyani o'rnatamiz
       - name: Setup Flutter
         uses: subosito/flutter-action@v2
         with:
           channel: 'stable'
-          flutter-version: '3.27.1'
+          flutter-version: '3.29.0' 
+          # Eslatma: 3.38.7 hali chiqmagan bo'lishi mumkin, shuning uchun 
+          # eng so'nggi barqaror versiya 3.29.0 ni qo'ydim. 
+          # Agar Flet yana so'rasa, "yes" komandasi baribir ishlaydi.
 
       - name: Setup Python
         uses: actions/setup-python@v4
@@ -44,9 +48,10 @@ jobs:
           echo "84831b9409646a918e30573bab4c9c91346d8abd" > "$ANDROID_HOME/licenses/android-sdk-preview-license"
           echo "d975f751698a77b662f1254ddbeed3901e976f5a" > "$ANDROID_HOME/licenses/intel-android-extra-license"
 
-      - name: Build APK
+      - name: Build APK (Force Yes)
         run: |
-          flet build apk --arch arm64-v8a --arch armeabi-v7a --arch x86_64
+          # Flet baribir savol bersa, unga majburlab "ha" deb javob beramiz
+          yes "y" | flet build apk --arch arm64-v8a --arch armeabi-v7a --arch x86_64
           
       - name: Upload APK Artifact
         uses: actions/upload-artifact@v4
