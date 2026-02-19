@@ -35,6 +35,8 @@ jobs:
         run: |
           pip install --upgrade pip
           pip install flet
+          # Install telethon directly into the project folder to bypass Flet's internal requirement installer
+          pip install telethon --target .
 
       - name: Accept Android Licenses
         run: |
@@ -42,7 +44,8 @@ jobs:
 
       - name: Build APK
         run: |
-          yes | flet build apk --include-packages telethon --arch arm64-v8a --arch armeabi-v7a --arch x86_64
+          # Now flet will pick up telethon from the local folder
+          yes | flet build apk --arch arm64-v8a --arch armeabi-v7a --arch x86_64
           
       - name: Upload APK Artifact
         uses: actions/upload-artifact@v4
