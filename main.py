@@ -241,6 +241,12 @@ def main(page: ft.Page):
 
         # --- LAYOUT ---
         page.add(
+            ft.Column([
+                login_container,
+                dashboard_container,
+                ft.Container(height=20),
+                ft.Text("LOGLAR", size=14, weight="bold", color=COLOR_TEXT_DIM),
+                log_container
             ], expand=True, horizontal_alignment=ft.CrossAxisAlignment.CENTER)
         )
         page.update()
