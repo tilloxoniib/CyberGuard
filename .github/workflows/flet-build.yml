@@ -34,7 +34,7 @@ jobs:
       - name: Install Flet and Dependencies
         run: |
           pip install --upgrade pip
-          pip install flet==0.80.1
+          pip install flet
           pip install -r requirements.txt
 
       - name: Accept Android Licenses
