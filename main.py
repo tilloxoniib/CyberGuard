@@ -268,4 +268,8 @@ def main(page: ft.Page):
         page.add(ft.Text(f"Xatolik: {e}", color="red"))
 
 if __name__ == "__main__":
-    ft.app(target=main)
+    try:
+        ft.app(target=main)
+    except Exception as e:
+        print(f"CRITICAL ERROR: {e}")
+        input("Press Enter to exit...")
